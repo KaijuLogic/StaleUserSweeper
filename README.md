@@ -1,12 +1,12 @@
 # StaleUserSweeper
-My way of solving the classic problem disabling users that have not logged into the domain in a while. This script is written for on-premises Windows active directory domains. 
+My way of solving a classic problem: disabling users that have not logged into the domain in a while. This script is written for on-premises Windows active directory domains. 
 
 ## DESCRIPTION
 For security purposes accounts that are not being utilised should be disabled. This script will check a list of OUs that need to be monitored and disable them if they have passed the desired threshold. This script will disabled the user, move it to the desired OU after disabling and update the users description stating why it was disabled and when. The original user description is preservered at the end of the description. This script will not disable accounts that have been recently created until they pass the threshold. 
 
-It's recommended to run in -whatif mode when testing in your environment to ensure the results are what you expect before fully implementing. 
-
 Reports will be generated in the directory the script is run from C:\Current\Path\DisabledUsersLogs\Reports and C:\Current\Path\DisabledUsersLogs\RunLogs\
+
+**It's recommended to run in -whatif mode when testing in your environment to ensure the results are what you expect before fully implementing.**
 
 ## FEATURES
 - Logs created for evidence that certain controls or requirements are being met
@@ -45,8 +45,8 @@ This will look through the list of OUs in the MonitoredOUs.txt text file and see
 StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
 ```
 
-TThis will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
+This will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
 
 ## Additional Notes
-Want to know more about this script?Check out my blog post about it on https://www.kaijulogic.com/ 
+Want to know more about this script and future improvements? Check out my blog post about it on https://www.kaijulogic.com/ 
 Check out my blog if you want to be in the loop on future projects, career stories and troubleshooting tips. https://www.kaijulogic.com/ 
