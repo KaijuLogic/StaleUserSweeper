@@ -31,12 +31,16 @@ RSAT: https://www.microsoft.com/en-us/download/details.aspx?id=45520
 - Run the script 
 
 ### Example 1
-C:\StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
+```PowerShell
+StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
+```
 
 The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within the default setting of 90 days. If they have they will be disabled and moved to the DisabledUsers OU. Reports will be generated in the directory the script is run from C:\Scripts\DisableUsers\DisabledUsersLogs and C:\Scripts\DisableUsers\RunLogs
 
 ### Example 2
-C:\Scripts\StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
+```PowerShell
+StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
+```
 
 The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
 
