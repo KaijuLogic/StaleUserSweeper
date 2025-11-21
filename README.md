@@ -6,6 +6,8 @@ For security purposes accounts that are not being utilised should be disabled. T
 
 It's recommended to run in -whatif mode when testing in your environment to ensure the results are what you expect before fully implementing. 
 
+Reports will be generated in the directory the script is run from C:\Current\Path\DisabledUsersLogs\Reports and C:\Current\Path\DisabledUsersLogs\RunLogs\
+
 ## FEATURES
 - Logs created for evidence that certain controls or requirements are being met
 - Runlog for troubleshooting and record keeping
@@ -35,15 +37,16 @@ RSAT: https://www.microsoft.com/en-us/download/details.aspx?id=45520
 StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
 ```
 
-The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within the default setting of 90 days. If they have they will be disabled and moved to the DisabledUsers OU. Reports will be generated in the directory the script is run from C:\Scripts\DisableUsers\DisabledUsersLogs and C:\Scripts\DisableUsers\RunLogs
+This will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within the default setting of 90 days. If they have they will be disabled and moved to the DisabledUsers OU. 
+
 
 ### Example 2
 ```PowerShell
 StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
 ```
 
-The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
+TThis will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
 
 ## Additional Notes
-Want to know more about this script?Check out my blog post about on https://www.kaijulogic.com/ 
-Check out my blog if you want to be in the loop on future projects, career stories and troubleshooting tips. 
+Want to know more about this script?Check out my blog post about it on https://www.kaijulogic.com/ 
+Check out my blog if you want to be in the loop on future projects, career stories and troubleshooting tips. https://www.kaijulogic.com/ 

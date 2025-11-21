@@ -131,7 +131,7 @@ $CurrentPath = split-path -Parent $PSCommandPath
 $LogDateDir = $CurrentDate.ToString("yyyy-MM")
 $LogFileNameTime = $CurrentDate.ToString("yyyy-MM-dd_HH.mm.ss")
 
-$DisabledLogDir = Join-Path -Path $CurrentPath -ChildPath "DisabledUsersLogs\$LogDateDir"
+$DisabledLogDir = Join-Path -Path $CurrentPath -ChildPath "DisabledUsersLogs\Reports\$LogDateDir"
 $RunLogDir = Join-Path -Path $CurrentPath -ChildPath "DisabledUsersLogs\RunLogs\$LogDateDir"
 
 $DisabledLogFile = Join-Path -Path $DisabledLogDir -ChildPath "DisabledAccounts_$LogFileNameTime.csv"
