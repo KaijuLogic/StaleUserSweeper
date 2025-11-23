@@ -205,7 +205,8 @@ Function Set-DisabledUsers{
             Write-Log -level INFO -message "$UserName Account Disabled" -logfile $RunLogOutput
         }
         Catch{
-            Write-Log -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+            Write-Log -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+            Throw  "Failed to disable the user $UserName"
         }
 
         #Update user description with note and date when it was disabled
@@ -216,7 +217,8 @@ Function Set-DisabledUsers{
             Write-Log -level INFO -message "$UserName Description Updated" -logfile $RunLogOutput
         }
         Catch{
-            Write-Log -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+            Write-Log -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+            Throw  "Failed to set description for $UserName" 
         }
 
         #Move disabled user to the disabled users OU 
@@ -227,6 +229,7 @@ Function Set-DisabledUsers{
         }
         Catch{
             Write-Log -level WARN -message "Failed to move $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+            Throw  "Failed to mov $UserName" 
         }
 
         # Get Users and output to log file
@@ -244,6 +247,7 @@ Function Set-DisabledUsers{
         }
         Catch{
             Write-Log -level WARN -message "Failed to create log file of disbled users. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+            Throw "Failed to create log file of disbled users."
         }
     }
 }
@@ -277,7 +281,7 @@ catch{
 $InactiveList = Find-InactiveUsers -OUlistContent $OUlist -MaxAge $UnusedDays
 
 If ($InactiveList){
-    Write-Verbose "Attempting to disabled callected usernames."
+    Write-Verbose "Attempting to disable collected usernames."
     $InactiveList | Set-DisabledUsers -DestOU $DisabledUsersOU
 }
 else{
