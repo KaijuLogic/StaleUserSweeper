@@ -4,14 +4,14 @@
     This script can be used to automate disabling accounts that have not logged into AD in XX number of days.
 
     .DESCRIPTION
-    For security purposes accounts that are not being utilised should be disabled. This script will check a list of OUs that need to be monitored and disable them 
-    if they have passed the desired threshold. This script will disabled the user, move it to the desired OU after disabling and update the users description stating why
-    it was disabled and when. The original user description is preservered at the end of the description. This script will not disable accounts that have been recently created
+    For security purposes, accounts that are not being utilised should be disabled. This script will check a list of OUs that need to be monitored and disable them 
+    if they have passed the desired threshold. This script will disable the user, move it to the desired OU after disabling and update the user's description stating why
+    it was disabled and when. The original user description is preserved at the end of the description. This script will not disable accounts that have been recently created 
     until they pass the threshold. 
-    
+
     The default threshold is set to 90 days. Two logs are created from this script in:
-        - DisabledUsersLogs : Contains CSV reports showing which users were disabled and basic info about the account
-        - RunLogs : Provides a run log that can be useful for troubleshooting and tracking if the script is running as expected.
+    - DisabledUsersLogs : Contains CSV reports showing which users were disabled and basic info about the account
+    - RunLogs : Provides a run log that can be useful for troubleshooting and tracking if the script is running as expected.
 
     It's recommended to run in -whatif mode when testing in your environment to ensure the results are what you expect before fully implementing. 
 
@@ -19,29 +19,34 @@
     Provide a path to a .txt (e.g. C:\Temp\MonitoredOUs.txt) file with a list of what OUs you want the script to check/monitor. Each OU should be on a new line and have it's full path (e.g. OU=GeneralUsers,OU=UserGroup-01,DC=Testnet,DC=com)
 
     .PARAMETER DisabledUsersOU
-    Provide the OU information where you want disabled users to be moved to (e.g. OU=DisabledUsers,DC=Testnet,DC=com)
+     Provide the OU where disabled users should be moved to. (e.g. OU=DisabledUsers,DC=Testnet,DC=com)
 
     .PARAMETER UnusedDays
-    Provide the max age in days for users before they are disabled. If this is not set the script will default to a 90 day max age.
+     Provide the maximum age in days for users before they are disabled. If this is not set, the script will default to 90 days.
 
     .EXAMPLE
-    C:\AutoDisableAccount.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
+    C:\StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
 
-    The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within the default setting of 90 days. If they have they will be disabled and moved to the DisabledUsers OU. 
+    The above example will look through the list of OUs in the MonitoredOUs.txt text file and check whether any users have not logged in within the default 90-day period. If they have, they will be disabled and moved to the DisabledUsers OU. 
     Reports will be generated in the directory the script is run from C:\Scripts\DisableUsers\DisabledUsersLogs and C:\Scripts\DisableUsers\RunLogs
 
     .EXAMPLE
-    C:\Scripts\AutoDisableAccount.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
+    C:\Scripts\StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUsersOU "OU=DisabledUsers,DC=Testnet,DC=com" -UnusedDays 60
 
-    The above example will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
+    The above example will iterate through the list of OUs in the MonitoredOUs.txt file and check whether any users have not logged in within 60 days.
 
     .NOTES
     Created by: KaijuLogic
     Created Date: 05.2021
-    Last Modified Date: 21.11.2025
+    Last Modified Date: 23.11.2025
     Last Modified By: KaijuLogic
 
     LATEST MODIFICATIONS:
+        23.11.2025
+                Corrected some spelling
+                Fixed user filter
+                Cleaned up some notes
+                
         20.11.2025: 
                 Added splatting to Find-InactiveUsers and userprops variable to try and make things easier to read and edit
                 added parameters to Set-DisabledUsers and allowed to take in data from a pipe for easier to reading and portability
@@ -54,11 +59,8 @@
         DONE: Verify the provided OU path exists 
         DONE: Update Get-Help section to be functional with correct information
         DONE: Update log creation to newer version so it matches other scripts. - waiting to test
-        For teams that us multiple OUs for disabled users make it possible to have a CSV that specifies both where the script should check and also where to send disabled users for that area. 
-                e.g: OU=SITEA,DC=TESTNET,DC=COM  ----> OU=DisabledUsers,OU=SITEA,DC=TESTNET,DC=COM
-                    OU=GeneralUsers,OU=SITEB,DC=TESTNET,DC=COM  ----> OU=DisabledUsers,OU=SITEB,DC=TESTNET,DC=COM
-                    OU=Execs,OU=SITEB,DC=TESTNET,DC=COM  ----> OU=DisabledUsers,OU=SITEB,DC=TESTNET,DC=COM
-                    OU=GeneralUsers,OU=SITEC,DC=TESTNET,DC=COM  ----> OU=DisabledUsers,OU=SITEC,DC=TESTNET,DC=COM
+        Allow multiple destinations to be given for disabled users. Something like a CSV that specifies both which OUs to monitor and where users from those OUs should be sent when disabled.  
+
 
     .DISCLAIMER:
     By using this content you agree to the following: This script may be used for legal purposes only. Users take full responsibility 
