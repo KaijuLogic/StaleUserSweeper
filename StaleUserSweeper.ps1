@@ -171,18 +171,18 @@ Function Find-InactiveUsers{
         }
 
         $UserProps = "Name", "SamAccountName", "DisplayName", "DistinguishedName", "WhenCreated", "LastLogonDate", "Description"
+
         Try{
-            $AllStale = Search-ADAccount @UserSearchParams 
             #Filters out any accounts that were created within the max age limit, this makes sure
-            #that any users that were recently created aren't disabled until their account reaches the threshold
-            foreach($StaleUser in $AllStale){
+            #that any users that were recently created aren't disabled until their account reaches the threshold.
+            Search-ADAccount @UserSearchParams |
                 Get-ADuser $StaleUser -properties $UserProps |
-                Where-Object {($_.WhenCreated -lt (Get-Date).AddDays(-$UnusedDays) -and ($_.LastLogonDate -eq $NULL))} |
+                Where-Object {$_.WhenCreated -lt (Get-Date).AddDays(-$UnusedDays)} |
                 Select-Object $UserProps
-            }
         }
         Catch{          
             Write-Log -level ERROR -Message "Failed to get user list. ERROR: $_" -logfile $RunLogOutput
+            Throw "Failed to get user list. ERROR: $($_.ErrorDetails.Message)"
         }
     }
 }
