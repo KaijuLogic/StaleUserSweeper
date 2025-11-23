@@ -22,7 +22,8 @@ Reports will be generated in the directory the script is run from C:\Current\Pat
 - Supports "-whatif" runs
 
 ## Pre-Requisits
-Not much, this either needs to be run on a server with Active Directory installed, or system with RSAT tools.
+Not much, this either needs to be run on a server with Active Directory installed, or system with RSAT tools. 
+You also need the appropriate Active Directory permissions to modify users. 
 RSAT: https://www.microsoft.com/en-us/download/details.aspx?id=45520 
 
 ## Usage

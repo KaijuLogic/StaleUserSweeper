@@ -19,10 +19,10 @@
     Provide a path to a .txt (e.g. C:\Temp\MonitoredOUs.txt) file with a list of what OUs you want the script to check/monitor. Each OU should be on a new line and have it's full path (e.g. OU=GeneralUsers,OU=UserGroup-01,DC=Testnet,DC=com)
 
     .PARAMETER DisabledUsersOU
-     Provide the OU where disabled users should be moved to. (e.g. OU=DisabledUsers,DC=Testnet,DC=com)
+    Provide the OU where disabled users should be moved to. (e.g. OU=DisabledUsers,DC=Testnet,DC=com)
 
     .PARAMETER UnusedDays
-     Provide the maximum age in days for users before they are disabled. If this is not set, the script will default to 90 days.
+    Provide the maximum age in days for users before they are disabled. If this is not set, the script will default to 90 days.
 
     .EXAMPLE
     C:\StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -DisabledUserOU "OU=DisabledUsers,DC=Testnet,DC=com"
@@ -107,6 +107,8 @@ $RunLogDir = Join-Path -Path $CurrentPath -ChildPath "DisabledUsersLogs\RunLogs\
 $DisabledLogFile = Join-Path -Path $DisabledLogDir -ChildPath "DisabledAccounts_$LogFileNameTime.csv"
 $RunLogOutput = Join-Path -Path $RunLogDir -ChildPath "DisableAccounts_RunLog_$LogFileNameTime.txt"
 
+#Used to trasck how long the script took to process
+$sw = [Diagnostics.Stopwatch]::StartNew()
 #################################### FUNCTIONS #######################################
 #Function to create folders and path if they do not already exist to allow for logs to be created. 
 Function Set-NewFolders {
@@ -290,3 +292,7 @@ If ($InactiveList){
 else{
     Write-Log -level INFO -message "No inactive accounts were found on this run" -logfile $RunLogOutput
 }
+
+$sw.stop()
+
+Write-Log -level INFO -message  "ADMX and GPO backup script ran for: $($sw.elapsed)" -logfile $RunLogOutput
