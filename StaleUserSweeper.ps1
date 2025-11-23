@@ -41,45 +41,13 @@
     Last Modified Date: 21.11.2025
     Last Modified By: KaijuLogic
 
-    ChangeLog: 
-
+    LATEST MODIFICATIONS:
         20.11.2025: 
                 Added splatting to Find-InactiveUsers and userprops variable to try and make things easier to read and edit
                 added parameters to Set-DisabledUsers and allowed to take in data from a pipe for easier to reading and portability
                 Added OU path validation
                 Updating script descriptions and notes
                 Implemented better try-catches for getting oulist contents and testing ou path. Implemented 'throws' to better fit powershell standards
-
-        20.11.2025: 
-                enabled "What-If" 
-                Corrected OUListPath processing
-                Moved report creation to AFTER accounts are disabled. No idea why I had it at the beginning of the function before. 
-                Made use of write-verbose for troubleshooting steps
-                Updated folder creation function to accept lists of folders instead of having to call it multiple times
-
-        19.11.2025 :    
-                Added path validation to parameter
-                Adding more notes
-                Simplified varibles and report paths
-                Switched to using Join-Path instead of "+" 
-                Updated Write-log function to also write the message to the host cli in ~pretty~ colors so it's easier to read while running it. It also cleaned up the code so I'm not being as repetative
-                     
-        06.09.2025 :    
-                Simplified account query string by utilizing Search-ADAccount 
-
-        06.05.2025 :    
-                Created Parameters to make the script more universal. Provide a path to a list of OUs that need monitored and specify the disabled users OU to send accounts to. 
-                Changed variable names to make them easier to read and understand their use
-                Split function that was used previously to collect and disable users for readibility and easier troubelshooting. Find-InactiveUsers and Set-DisabledUsers
-                Created Try-Catch sections for multiple functions for troubleshooting and better tracking.
-                Disabled users report is now a CSV file for easier review
-
-        05.22.2024 :    
-                made the script more generalized. You must now provide an OU list and specify the disabled users OU.
-                Additional notes and descriptions
-                Script will now disable accounts that were created but have not been used in the $UnusedDays variable
-
-        This script was a complete rebuild of a script I built in 2021. It's a bit of a "The Ship of Theseus" situation so I'm not keeping all of the notes from before I starting reubuilding
 
     TO-DO: 
         DONE: improve folder creation
