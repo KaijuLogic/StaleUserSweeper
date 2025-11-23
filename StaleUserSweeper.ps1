@@ -200,38 +200,39 @@ Function Set-DisabledUsers{
         $UserName = $User.DisplayName
         #Disable account
         Write-Verbose "Attempting to disable $UserName"
-        Try{
-            Disable-ADAccount -Identity $User.DistinguishedName
-            Write-Log -level INFO -message "$UserName Account Disabled" -logfile $RunLogOutput
-        }
-        Catch{
-            Write-Log -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
-            Throw  "Failed to disable the user $UserName"
-        }
+        If ($PSCmdlet.ShouldProcess($UserName)){
+            Try{
+                Disable-ADAccount -Identity $User.DistinguishedName
+                Write-Log -level INFO -message "$UserName Account Disabled" -logfile $RunLogOutput
+            }
+            Catch{
+                Write-Log -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+                Throw  "Failed to disable the user $UserName"
+            }
 
-        #Update user description with note and date when it was disabled
-        Write-Verbose "Attempting to set description for: $UserName"
-        Try{
-            $new_desc = "Auto-Disabled Due to Inactivity: " + $CurrentDate + " :" + "ORIGINALDESC:" + $User.Description 
-            Set-ADUser $User.DistinguishedName -Description $new_desc
-            Write-Log -level INFO -message "$UserName Description Updated" -logfile $RunLogOutput
-        }
-        Catch{
-            Write-Log -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
-            Throw  "Failed to set description for $UserName" 
-        }
+            #Update user description with note and date when it was disabled
+            Write-Verbose "Attempting to set description for: $UserName"
+            Try{
+                $new_desc = "Auto-Disabled Due to Inactivity: " + $CurrentDate + " :" + "ORIGINALDESC:" + $User.Description 
+                Set-ADUser $User.DistinguishedName -Description $new_desc
+                Write-Log -level INFO -message "$UserName Description Updated" -logfile $RunLogOutput
+            }
+            Catch{
+                Write-Log -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+                Throw  "Failed to set description for $UserName" 
+            }
 
-        #Move disabled user to the disabled users OU 
-        Write-Verbose "Attempting to move: $UserName to $DisabledUsersOU"
-        Try{
-            Move-ADObject -Identity $User.DistinguishedName -TargetPath $DisabledUsersOU
-            Write-Log -level INFO -message "$UserName moved to $DisabledUsersOU" -logfile $RunLogOutput
+            #Move disabled user to the disabled users OU 
+            Write-Verbose "Attempting to move: $UserName to $DisabledUsersOU"
+            Try{
+                Move-ADObject -Identity $User.DistinguishedName -TargetPath $DisabledUsersOU
+                Write-Log -level INFO -message "$UserName moved to $DisabledUsersOU" -logfile $RunLogOutput
+            }
+            Catch{
+                Write-Log -level WARN -message "Failed to move $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+                Throw  "Failed to mov $UserName" 
+            }
         }
-        Catch{
-            Write-Log -level WARN -message "Failed to move $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
-            Throw  "Failed to mov $UserName" 
-        }
-
         # Get Users and output to log file
         Write-Verbose "Attempting to create CSV report of disabled accounts"
         Try{
