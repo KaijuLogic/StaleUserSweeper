@@ -66,7 +66,7 @@
     By using this content you agree to the following: This script may be used for legal purposes only. Users take full responsibility 
     for any actions performed using this script. The author accepts no liability for any damage caused by this script.        
 #>
-####################### START PARAMETERS #######################
+####################### SCRIPT PARAMETERS #######################
 [CmdletBinding(SupportsShouldProcess)]
 Param(
 	[Parameter(Mandatory=$True)]
