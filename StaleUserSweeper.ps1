@@ -267,7 +267,7 @@ Write-Log -level INFO -message "RUN BY $ENV:UserName ON $ENV:ComputerName" -logf
 try{
     Write-Verbose "Attempting to open $OUlist"
     #Reads the OU list and removes any blank lines if they exist
-    $OUlist = Get-Content -path $OUListPath | ? {$_.trim() -ne "" }
+    $OUlist = Get-Content -path $OUListPath | where-object {$_.trim() -ne "" }
 }
 catch{
     Write-Log -level ERROR -message "Something went wrong reading from $OUlist. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
