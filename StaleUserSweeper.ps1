@@ -1,4 +1,3 @@
-
 <#
     .SYNOPSIS
     This script can be used to automate disabling accounts that have not logged into AD in XX number of days.
@@ -63,8 +62,8 @@
 
 
     .DISCLAIMER:
-    By using this content you agree to the following: This script may be used for legal purposes only. Users take full responsibility 
-    for any actions performed using this script. The author accepts no liability for any damage caused by this script.        
+    This script may be used for legal purposes only. The user assumes full responsibility for any actions performed using this script. 
+    The author accepts no liability for any damage caused by this script.        
 #>
 ####################### SCRIPT PARAMETERS #######################
 [CmdletBinding(SupportsShouldProcess)]
@@ -86,6 +85,7 @@ Param(
 	[Int]$UnusedDays = 90
 )
 ################################## Import Modules #################################
+<
 try{
 	Import-Module ActiveDirectory
 }
@@ -107,11 +107,11 @@ $RunLogDir = Join-Path -Path $CurrentPath -ChildPath "DisabledUsersLogs\RunLogs\
 $DisabledLogFile = Join-Path -Path $DisabledLogDir -ChildPath "DisabledAccounts_$LogFileNameTime.csv"
 $RunLogOutput = Join-Path -Path $RunLogDir -ChildPath "DisableAccounts_RunLog_$LogFileNameTime.txt"
 
-#Used to trasck how long the script took to process
+#Used to tracks how long the script took to process
 $sw = [Diagnostics.Stopwatch]::StartNew()
 #################################### FUNCTIONS #######################################
 #Function to create folders and path if they do not already exist to allow for logs to be created. 
-Function Set-NewFolders {
+Function Set-NewFolder {
     param(
         [Parameter(Mandatory=$true)]
         [string[]] $FolderPaths
@@ -130,7 +130,7 @@ Function Set-NewFolders {
 	}
 }
 
-Function Write-Log{
+Function Write-ScriptLog{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$false)]
@@ -185,7 +185,7 @@ Function Find-InactiveUsers{
                 Select-Object $UserProps
         }
         Catch{          
-            Write-Log -level ERROR -Message "Failed to get user list. ERROR: $_" -logfile $RunLogOutput
+            Write-ScriptLog -level ERROR -Message "Failed to get user list. ERROR: $_" -logfile $RunLogOutput
             Throw "Failed to get user list. ERROR: $($_.ErrorDetails.Message)"
         }
     }
@@ -207,10 +207,10 @@ Function Set-DisabledUsers{
         If ($PSCmdlet.ShouldProcess($UserName)){
             Try{
                 Disable-ADAccount -Identity $User.DistinguishedName
-                Write-Log -level INFO -message "$UserName Account Disabled" -logfile $RunLogOutput
+                Write-ScriptLog -level INFO -message "$UserName Account Disabled" -logfile $RunLogOutput
             }
             Catch{
-                Write-Log -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+                Write-ScriptLog -level WARN -message "Failed to disable the user $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
                 Throw  "Failed to disable the user $UserName"
             }
 
@@ -219,10 +219,10 @@ Function Set-DisabledUsers{
             Try{
                 $new_desc = "Auto-Disabled Due to Inactivity: " + $CurrentDate + " :" + "ORIGINALDESC:" + $User.Description 
                 Set-ADUser $User.DistinguishedName -Description $new_desc
-                Write-Log -level INFO -message "$UserName Description Updated" -logfile $RunLogOutput
+                Write-ScriptLog -level INFO -message "$UserName Description Updated" -logfile $RunLogOutput
             }
             Catch{
-                Write-Log -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+                Write-ScriptLog -level WARN -message "Failed to set description for $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
                 Throw  "Failed to set description for $UserName" 
             }
 
@@ -230,10 +230,10 @@ Function Set-DisabledUsers{
             Write-Verbose "Attempting to move: $UserName to $DisabledUsersOU"
             Try{
                 Move-ADObject -Identity $User.DistinguishedName -TargetPath $DisabledUsersOU
-                Write-Log -level INFO -message "$UserName moved to $DisabledUsersOU" -logfile $RunLogOutput
+                Write-ScriptLog -level INFO -message "$UserName moved to $DisabledUsersOU" -logfile $RunLogOutput
             }
             Catch{
-                Write-Log -level WARN -message "Failed to move $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+                Write-ScriptLog -level WARN -message "Failed to move $UserName. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
                 Throw  "Failed to mov $UserName" 
             }
         }
@@ -251,7 +251,7 @@ Function Set-DisabledUsers{
             $ReportProps | Export-Csv $DisabledLogFile -append -NoTypeInformation
         }
         Catch{
-            Write-Log -level WARN -message "Failed to create log file of disbled users. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
+            Write-ScriptLog -level WARN -message "Failed to create log file of disbled users. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput 
             Throw "Failed to create log file of disbled users."
         }
     }
@@ -259,10 +259,10 @@ Function Set-DisabledUsers{
 
 
 #################################### EXECUTION #####################################
-Set-NewFolders -FolderPath $DisabledLogDir,$RunLogDir
+Set-NewFolder -FolderPath $DisabledLogDir,$RunLogDir
 
-Write-Log -level INFO -message "Auto Disable Stale Accounts Max age setting $UnusedDays Days" -logfile $RunLogOutput
-Write-Log -level INFO -message "RUN BY $ENV:UserName ON $ENV:ComputerName" -logfile $RunLogOutput
+Write-ScriptLog -level INFO -message "Auto Disable Stale Accounts Max age setting $UnusedDays Days" -logfile $RunLogOutput
+Write-ScriptLog -level INFO -message "RUN BY $ENV:UserName ON $ENV:ComputerName" -logfile $RunLogOutput
 
 try{
     Write-Verbose "Attempting to open $OUlist"
@@ -270,7 +270,7 @@ try{
     $OUlist = Get-Content -path $OUListPath | ? {$_.trim() -ne "" }
 }
 catch{
-    Write-Log -level ERROR -message "Something went wrong reading from $OUlist. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+    Write-ScriptLog -level ERROR -message "Something went wrong reading from $OUlist. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
     Throw "Something went wrong reading from $OUlist."
 }
 
@@ -279,7 +279,7 @@ try{
     Get-ADOrganizationalUnit -Identity $DisabledUsersOU | Out-null
 }
 catch{
-    Write-Log -level ERROR -message "Could not find destination OU $DisabledUsersOU. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
+    Write-ScriptLog -level ERROR -message "Could not find destination OU $DisabledUsersOU. ERROR: $($_.ErrorDetails.Message)" -logfile $RunLogOutput
     Throw "Could not find destination OU $DisabledUsersOU."
 }
 
@@ -290,9 +290,9 @@ If ($InactiveList){
     $InactiveList | Set-DisabledUsers -DestOU $DisabledUsersOU
 }
 else{
-    Write-Log -level INFO -message "No inactive accounts were found on this run" -logfile $RunLogOutput
+    Write-ScriptLog -level INFO -message "No inactive accounts were found on this run" -logfile $RunLogOutput
 }
 
 $sw.stop()
 
-Write-Log -level INFO -message  "ADMX and GPO backup script ran for: $($sw.elapsed)" -logfile $RunLogOutput
+Write-ScriptLog -level INFO -message  "ADMX and GPO backup script ran for: $($sw.elapsed)" -logfile $RunLogOutput
