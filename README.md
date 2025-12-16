@@ -49,5 +49,5 @@ StaleUserSweeper.ps1 -OUListPath "C:\Scripts\DisableUsers\MonitoredOUs.txt" -Dis
 This will look through the list of OUs in the MonitoredOUs.txt text file and see if any users have not logged in within 60 days.
 
 ## Additional Notes
-Want to know more about this script and future improvements? Check out my blog post about it on https://www.kaijulogic.com/ 
-Check out my blog if you want to be in the loop on future projects, career stories and troubleshooting tips. https://www.kaijulogic.com/ 
+Want to know more about this script and future improvements? Check out my blog post about it on  https://www.kaijulogic.com/blog/disable-inactive-ad-accounts
+Follow my blog if you want to be in the loop on future projects, career stories and troubleshooting tips. https://www.kaijulogic.com/ 
